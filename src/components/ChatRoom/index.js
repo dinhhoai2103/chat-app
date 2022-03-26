@@ -1,5 +1,19 @@
 import React from "react";
+import { Col, Row } from "antd";
+import Chat from "./Chat";
+import SideBar from "./SideBar";
 
 export default function ChatRoom() {
-  return <h1>This is Chat Room</h1>;
+  return (
+    <div>
+      <Row>
+        <Col span={6}>
+          <SideBar></SideBar>
+        </Col>
+        <Col span={18}>
+          <Chat></Chat>
+        </Col>
+      </Row>
+    </div>
+  );
 }

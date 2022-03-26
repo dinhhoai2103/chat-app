@@ -18,6 +18,8 @@ export default function AuthProvider({ children }) {
         setUser({ displayName, email, uid, photoURL });
         setIsLoading(false);
         navigate("/");
+      } else {
+        navigate("/login");
       }
     });
     return () => {
@@ -25,8 +27,12 @@ export default function AuthProvider({ children }) {
     };
   }, [navigate]);
 
+  const value = {
+    user,
+    setUser,
+  };
   return (
-    <AuthContext.Provider value={user}>
+    <AuthContext.Provider value={value}>
       {isLoading ? <Spin /> : children}
     </AuthContext.Provider>
   );
