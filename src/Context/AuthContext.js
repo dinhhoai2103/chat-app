@@ -19,6 +19,7 @@ export default function AuthProvider({ children }) {
         setIsLoading(false);
         navigate("/");
       } else {
+        setIsLoading(false);
         navigate("/login");
       }
     });

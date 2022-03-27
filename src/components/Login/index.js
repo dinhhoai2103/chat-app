@@ -1,15 +1,34 @@
 import React from "react";
 import { Row, Col, Button, Typography } from "antd";
 import { auth } from "config/firebase";
-import { signInWithPopup, FacebookAuthProvider } from "firebase/auth";
+import {
+  signInWithPopup,
+  FacebookAuthProvider,
+  getAdditionalUserInfo,
+} from "firebase/auth";
+import { addDocument } from "config/services";
 
 const { Title } = Typography;
 
 const fbProvider = new FacebookAuthProvider();
 
 const Login = () => {
-  const handleFacebookLogin = () => {
-    signInWithPopup(auth, fbProvider);
+  const handleFacebookLogin = async () => {
+    await signInWithPopup(auth, fbProvider)
+      .then(async (result) => {
+        const { user } = result;
+        const additionalUserInfo = getAdditionalUserInfo(result);
+        if (additionalUserInfo?.isNewUser) {
+          await addDocument("users", {
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            uid: user.uid,
+            providerId: additionalUserInfo.providerId,
+          });
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
