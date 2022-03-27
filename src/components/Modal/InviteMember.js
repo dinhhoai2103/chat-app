@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Button, Select, Spin, Avatar } from "antd";
+import { Form, Modal, Select, Spin, Avatar } from "antd";
 import { AppContext } from "Context/AppContext";
 import { debounce } from "lodash";
 import React, { useContext, useState, useMemo } from "react";
@@ -101,6 +101,7 @@ export default function InviteMember() {
       <Modal
         title="Invite member"
         visible={isInviteMemberVisible}
+        destroyOnClose={true}
         onCancel={handleCancel}
         onOk={handleOk}
       >
@@ -108,6 +109,7 @@ export default function InviteMember() {
           <DebounceSelect
             mode="multiple"
             label="Name"
+            name="search-user"
             value={value}
             placeholder="Select member"
             fetchOption={fetchUser}

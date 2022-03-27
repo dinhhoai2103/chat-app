@@ -1,8 +1,11 @@
 import { UserAddOutlined } from "@ant-design/icons";
 import { Avatar, Button, Form, Tooltip, Input, Alert } from "antd";
 import InviteMember from "components/Modal/InviteMember";
+import { addDocument } from "config/services";
 import { AppContext } from "Context/AppContext";
-import React, { useContext, useMemo } from "react";
+import { AuthContext } from "Context/AuthContext";
+import useFirestore from "hooks/useFirestore";
+import React, { useContext, useMemo, useState } from "react";
 import styled from "styled-components";
 import Message from "./Message";
 
@@ -64,9 +67,40 @@ const FormStyled = styled(Form)`
   }
 `;
 export default function Chat() {
+  const {
+    user: { uid, photoURL, displayName },
+  } = useContext(AuthContext);
   const { selectedRoom, members, setIsInviteMemberVisible } =
     useContext(AppContext);
+  const [form] = Form.useForm();
+  const [message, setMessage] = useState("");
+  const handleChangeMessage = (e) => {
+    setMessage(e.target.value);
+  };
+  const handleSendMessage = async () => {
+    if (message && message.trim().length > 0) {
+      await addDocument("messages", {
+        message,
+        uid,
+        photoURL,
+        displayName,
+        roomId: selectedRoom.id,
+      });
+      setMessage("");
+      form.resetFields(["message"]);
+    }
+  };
 
+  const conditionMessage = useMemo(() => {
+    if (selectedRoom && selectedRoom.id) {
+      return {
+        name: "roomId",
+        operator: "==",
+        value: selectedRoom?.id,
+      };
+    }
+  }, [selectedRoom?.id]);
+  const messages = useFirestore("messages", conditionMessage);
   return selectedRoom && Object.keys(selectedRoom).length > 0 ? (
     <>
       <RoomStyled>
@@ -101,18 +135,30 @@ export default function Chat() {
 
         <ContentWrapper>
           <MessageListStyled>
-            <Message
-              displayName="Hoai"
-              message="Hello"
-              createAt={new Date()}
-              photoURL={null}
-            />
+            {messages &&
+              messages.length > 0 &&
+              messages.map((message) => (
+                <Message
+                  key={message.id}
+                  displayName={message.displayName}
+                  message={message.message}
+                  createAt={message.createdAt}
+                  photoURL={message.photoURL}
+                />
+              ))}
           </MessageListStyled>
-          <FormStyled>
-            <Form.Item>
-              <TextArea placeholder="Message" autoComplete="off" />
+          <FormStyled form={form}>
+            <Form.Item name="message">
+              <TextArea
+                onChange={handleChangeMessage}
+                onPressEnter={handleSendMessage}
+                placeholder="Message"
+                autoComplete="off"
+              />
             </Form.Item>
-            <Button type="primary">Send</Button>
+            <Button type="primary" onClick={handleSendMessage}>
+              Send
+            </Button>
           </FormStyled>
         </ContentWrapper>
       </RoomStyled>
