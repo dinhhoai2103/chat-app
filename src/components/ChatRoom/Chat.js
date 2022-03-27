@@ -1,5 +1,6 @@
 import { UserAddOutlined } from "@ant-design/icons";
-import { Avatar, Button, Form, Tooltip, Input } from "antd";
+import { Avatar, Button, Form, Tooltip, Input, Alert } from "antd";
+import InviteMember from "components/Modal/InviteMember";
 import { AppContext } from "Context/AppContext";
 import React, { useContext, useMemo } from "react";
 import styled from "styled-components";
@@ -63,53 +64,61 @@ const FormStyled = styled(Form)`
   }
 `;
 export default function Chat() {
-  const { selectedRoom, members } = useContext(AppContext);
+  const { selectedRoom, members, setIsInviteMemberVisible } =
+    useContext(AppContext);
 
   return selectedRoom && Object.keys(selectedRoom).length > 0 ? (
-    <RoomStyled>
-      <HeaderWrapper>
-        <div className="header_room">
-          <p className="header_name">{selectedRoom?.name}</p>
-          <span className="header_des">{selectedRoom?.description}</span>
-        </div>
-        <GroupMemberStyled>
-          <Button type="text" icon={<UserAddOutlined />}>
-            Invite
-          </Button>
-          <Avatar.Group size="small" maxCount={2}>
-            {members &&
-              members.length > 0 &&
-              members.map((member) => (
-                <Tooltip key={member.id} title={member.displayName}>
-                  <Avatar src={member.photoURL}>
-                    {member.photoURL
-                      ? ""
-                      : member.displayName?.chartAt(0).toUpperCase()}
-                  </Avatar>
-                </Tooltip>
-              ))}
-          </Avatar.Group>
-        </GroupMemberStyled>
-      </HeaderWrapper>
+    <>
+      <RoomStyled>
+        <HeaderWrapper>
+          <div className="header_room">
+            <p className="header_name">{selectedRoom?.name}</p>
+            <span className="header_des">{selectedRoom?.description}</span>
+          </div>
+          <GroupMemberStyled>
+            <Button
+              type="text"
+              icon={<UserAddOutlined />}
+              onClick={() => setIsInviteMemberVisible(true)}
+            >
+              Invite
+            </Button>
+            <Avatar.Group size="small" maxCount={2}>
+              {members &&
+                members.length > 0 &&
+                members.map((member) => (
+                  <Tooltip key={member.id} title={member.displayName}>
+                    <Avatar src={member.photoURL}>
+                      {member.photoURL
+                        ? ""
+                        : member.displayName?.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </Tooltip>
+                ))}
+            </Avatar.Group>
+          </GroupMemberStyled>
+        </HeaderWrapper>
 
-      <ContentWrapper>
-        <MessageListStyled>
-          <Message
-            displayName="Hoai"
-            message="Hello"
-            createAt={new Date()}
-            photoURL={null}
-          />
-        </MessageListStyled>
-        <FormStyled>
-          <Form.Item>
-            <TextArea placeholder="Message" autoComplete="off" />
-          </Form.Item>
-          <Button type="primary">Send</Button>
-        </FormStyled>
-      </ContentWrapper>
-    </RoomStyled>
+        <ContentWrapper>
+          <MessageListStyled>
+            <Message
+              displayName="Hoai"
+              message="Hello"
+              createAt={new Date()}
+              photoURL={null}
+            />
+          </MessageListStyled>
+          <FormStyled>
+            <Form.Item>
+              <TextArea placeholder="Message" autoComplete="off" />
+            </Form.Item>
+            <Button type="primary">Send</Button>
+          </FormStyled>
+        </ContentWrapper>
+      </RoomStyled>
+      <InviteMember />
+    </>
   ) : (
-    <></>
+    <Alert type="info" message="Please select room!" />
   );
 }

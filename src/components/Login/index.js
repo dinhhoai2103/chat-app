@@ -6,7 +6,7 @@ import {
   FacebookAuthProvider,
   getAdditionalUserInfo,
 } from "firebase/auth";
-import { addDocument } from "config/services";
+import { addDocument, generateKeywords } from "config/services";
 
 const { Title } = Typography;
 
@@ -25,6 +25,7 @@ const Login = () => {
             photoURL: user.photoURL,
             uid: user.uid,
             providerId: additionalUserInfo.providerId,
+            keywords: generateKeywords(user.displayName.toLocaleLowerCase()),
           });
         }
       })

@@ -37,7 +37,7 @@ export default function UserInfo() {
     <UserWrapper>
       <div>
         <Avatar src={user?.photoURL}>
-          {user?.photoURL ? "" : user?.displayName?.chartAt(0).toUpperCase()}
+          {user?.photoURL ? "" : user?.displayName?.charAt(0).toUpperCase()}
         </Avatar>
         <Typography.Text className="username">
           {user?.displayName}

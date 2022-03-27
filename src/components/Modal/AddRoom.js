@@ -25,7 +25,12 @@ export default function AddRoom() {
   };
   return (
     <div>
-      <Modal title="Add new room chat" visible={isAddRoomVisible} footer={[]}>
+      <Modal
+        title="Add new room chat"
+        visible={isAddRoomVisible}
+        footer={[]}
+        onCancel={handleCancel}
+      >
         <Form
           form={form}
           layout="vertical"
