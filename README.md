@@ -2,9 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Information
 
-In the project directory, you can run:
+Chat-app realtime
+Chat-app uses 'antd' library to build layout, back-end uses firebase to get & update realtime data
 
 ### `npm start`
 
