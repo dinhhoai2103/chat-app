@@ -12,19 +12,19 @@ const useFirestore = (selectCollection, condition) => {
   const [document, setDocument] = useState([]);
   useEffect(() => {
     let collectionRef;
-    if (condition && Object.keys(condition).length > 0) {
-      if (!condition.value && !condition.value.length < 1) {
+    if (condition && Object.keys(condition)?.length > 0) {
+      if (!condition.value && !condition.value?.length < 1) {
         return;
       }
       collectionRef = query(
         collection(db, selectCollection),
         where(condition.name, condition.operator, condition.value),
-        orderBy("createAt")
+        orderBy("createdAt")
       );
     } else {
       collectionRef = query(
         collection(db, selectCollection),
-        orderBy("createAt")
+        orderBy("createdAt")
       );
     }
     const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
@@ -32,7 +32,9 @@ const useFirestore = (selectCollection, condition) => {
         ...doc.data(),
         id: doc.id,
       }));
-      setDocument(data);
+      if (data && data.length > 0) {
+        setDocument(data);
+      }
     });
 
     return unsubscribe;

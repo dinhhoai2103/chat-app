@@ -1,5 +1,6 @@
 import { PlusSquareOutlined } from "@ant-design/icons";
 import { Collapse, Typography, Button } from "antd";
+import AddRoom from "components/Modal/AddRoom";
 import { AppContext } from "Context/AppContext";
 import React, { useContext } from "react";
 import styled from "styled-components";
@@ -28,19 +29,36 @@ const LinkStyled = styled(Typography.Link)`
 `;
 
 export default function RoomList() {
-  const { rooms } = useContext(AppContext);
+  const { rooms, setIsAddRoomVisible, setSelectedRoomId } =
+    useContext(AppContext);
+  const handleAddRoom = () => {
+    setIsAddRoomVisible(true);
+  };
+  const handleSelectRoom = (id) => () => {
+    setSelectedRoomId(id);
+  };
   return (
     <>
       <Collapse ghost defaultActiveKey={["1"]}>
         <PanelStyled header="Room list" key="1">
           {rooms?.map((room) => (
-            <LinkStyled key={`room-${room.id}`}>{room?.name}</LinkStyled>
+            <LinkStyled
+              key={`room-${room.id}`}
+              onClick={handleSelectRoom(room.id)}
+            >
+              {room?.name}
+            </LinkStyled>
           ))}
-          <Button icon={<PlusSquareOutlined />} type="text">
+          <Button
+            icon={<PlusSquareOutlined />}
+            type="text"
+            onClick={handleAddRoom}
+          >
             Add new room
           </Button>
         </PanelStyled>
       </Collapse>
+      <AddRoom />
     </>
   );
 }
