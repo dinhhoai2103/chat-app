@@ -4,8 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Information
 
-Chat-app realtime
-Chat-app uses 'antd' library to build layout, back-end uses firebase to get & update realtime data
+Chat-app realtime.\
+Chat-app uses 'antd' library to build layout, back-end uses firebase to get & update realtime data.\
+Using React Context API.
 
 ### `npm start`
 
